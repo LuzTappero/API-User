@@ -2,8 +2,10 @@
 const exp = require('constants');
 const express= require('express');
 const app = express();
+const path= require('path')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
+app.use(express.static(path.join(__dirname, 'public')));
 const UserModel= require('../models/user-model.js')
 
 class UserController{
@@ -11,21 +13,22 @@ class UserController{
         const getAllUsers= await UserModel.getAll();
         res.send(getAllUsers);
     }
-
     static async getById(req,res){
         const id= req.params.id;
         const getById= await UserModel.getById(id);
         res.send(getById);
     }
+    static async showFormSignIn(req, res){
+        await res.sendFile(path.join(__dirname, '../public', 'sign-in.html'));
+    }
     static async createUser(req,res){
         try{
-            const userData= req.body;
-            const newUser= await UserModel.createUser(userData);
+            const newUser= await UserModel.createUser(req.body);
             res.status(201).send(newUser);
         }
         catch (error) {
-            console.error('Error in createUser controller:', error);
-            res.status(500).send({ error: 'Failed to add user' });
+            console.error('Error:', error);
+            res.status(500).send({ error: 'Failed to login' });
         }
     }
     static async deleteUser(req, res){

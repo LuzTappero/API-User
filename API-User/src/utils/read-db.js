@@ -14,7 +14,7 @@ async function readDB(){
     }
     catch(err){
         console.error('Error reading the file', err);
-        throw err;
+        return [];
     }
 }
 

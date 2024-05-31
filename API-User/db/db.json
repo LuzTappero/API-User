@@ -10,5 +10,29 @@
     "user": "User2EDITADO",
     "password": "password2",
     "email": "email2@gmail.com"
+  },
+  {
+    "id": 3,
+    "user": "user3",
+    "password": "password123",
+    "email": "user3@gmail.com"
+  },
+  {
+    "id": 4,
+    "user": "user4",
+    "password": "lalala",
+    "email": "user4@gmail.com"
+  },
+  {
+    "id": 5,
+    "user": "luz",
+    "password": "alalallala",
+    "email": "LUZ@GG.COM"
+  },
+  {
+    "id": 6,
+    "user": "aaa",
+    "password": "alalalalalal",
+    "email": "aaa@gmail.com"
   }
 ]

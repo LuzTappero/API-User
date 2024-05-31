@@ -10,9 +10,9 @@ const { read } = require('fs');
 const dbPath= path.join(__dirname, "../../db", "db.json")
 
 
-async function writeDB(users){
+async function writeDB(data){
     try{
-        await fs.writeFile(dbPath, JSON.stringify(users, null,  2));
+        await fs.writeFile(dbPath, JSON.stringify(data, null,  2), 'utf-8');
     } catch(error){
             console.error('Error writing to JSON File', error);
     }
