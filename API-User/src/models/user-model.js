@@ -24,7 +24,7 @@ class UserModel{
         if(!userId) return ('message: Id not found')
         return userId;
     }
-    static async createUser(userData){
+    static async registerUser(userData){
         try{
             const users = await readDB();
             const newUser={
@@ -60,9 +60,4 @@ class UserModel{
         return users[userIndex];
     }
 }
-
 module.exports = UserModel;
-//esta línea de código realiza la siguiente operación:...users[userIndex]: Copia todas las propiedades del objeto que se encuentra en la posición userIndex del array users al nuevo objeto. Es decir, todas las propiedades del usuario original se copian en el nuevo objeto....userData: Copia todas las propiedades de userData al nuevo objeto. Si userData tiene propiedades que tienen el mismo nombre que las propiedades del objeto users[userIndex], las propiedades de userData sobrescribirán las propiedades del usuario original.La combinación de estos dos pasos produce un nuevo objeto que contiene todas las propiedades del usuario original, con cualquier propiedad adicional o modificada de userData.
-  
-
-

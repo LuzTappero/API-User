@@ -9,7 +9,6 @@ const readDB = require('../utils/read-db.js');
 const { read } = require('fs');
 const dbPath= path.join(__dirname, "../../db", "db.json")
 
-
 async function writeDB(data){
     try{
         await fs.writeFile(dbPath, JSON.stringify(data, null,  2), 'utf-8');
@@ -17,12 +16,5 @@ async function writeDB(data){
             console.error('Error writing to JSON File', error);
     }
 }
-
-
-    // try{
-    //     if (!userData || !userData.user || !userData.password || !userData.email || !userData.id) {
-    //         throw new Error('Invalid user data');
-    //     }
-        
 module.exports= writeDB;
 

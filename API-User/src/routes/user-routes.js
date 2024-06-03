@@ -8,12 +8,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 router.get('/', UserController.getAll);
 router.get('/id/:id', UserController.getById)
 router.get('/register', UserController.showFormSignIn )
 
-router.post('/register', validateUser, UserController.createUser)
-//En el controlador, se asume asumir que si la solicitud llega, ya ha pasado las validaciones.
+router.post('/register', validateUser, UserController.registerUser)
 router.delete('/id/:id', UserController.deleteUser)
 router.patch('/id/:id', UserController.updateUser)
 

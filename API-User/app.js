@@ -2,15 +2,12 @@ const express= require('express');
 const app = express();
 const router = require('./src/routes/user-routes.js')
 app.use(express.json())
-app.use(express.urlencoded({ extended: true}))
-
+app.use(express.urlencoded({ extended: false}))
+const path= require('path')
+app.use(express.static(path.join(__dirname, 'src','public')));
 
 
 app.use('/user',router);
-
-
-
-
 
 
 

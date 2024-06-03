@@ -7,32 +7,26 @@
   },
   {
     "id": 2,
-    "user": "User2EDITADO",
-    "password": "password2",
-    "email": "email2@gmail.com"
+    "user": "User2",
+    "password": "123456lalala",
+    "email": "user2@gmail.com"
   },
   {
     "id": 3,
-    "user": "user3",
-    "password": "password123",
+    "user": "User3",
+    "password": "HOLACOMOESTAS123",
     "email": "user3@gmail.com"
   },
   {
     "id": 4,
     "user": "user4",
-    "password": "lalala",
+    "password": "lalalalalala",
     "email": "user4@gmail.com"
   },
   {
     "id": 5,
-    "user": "luz",
-    "password": "alalallala",
-    "email": "LUZ@GG.COM"
-  },
-  {
-    "id": 6,
-    "user": "aaa",
-    "password": "alalalalalal",
-    "email": "aaa@gmail.com"
+    "user": "user5",
+    "password": "soyelusuario5",
+    "email": "user5@gmail.com"
   }
 ]

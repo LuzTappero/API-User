@@ -1,12 +1,13 @@
 'use strict'
-const exp = require('constants');
 const express= require('express');
 const app = express();
 const path= require('path')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
 app.use(express.static(path.join(__dirname, 'public')));
-const UserModel= require('../models/user-model.js')
+const UserModel= require('../models/user-model.js');
+const readDB = require('../utils/read-db.js');
+
 
 class UserController{
     static async getAll(req,res){
@@ -19,36 +20,52 @@ class UserController{
         res.send(getById);
     }
     static async showFormSignIn(req, res){
-        await res.sendFile(path.join(__dirname, '../public', 'sign-in.html'));
+        await res.sendFile(path.join(__dirname, '../views', 'sign-in.html'));
     }
-    static async createUser(req,res){
+    static async registerUser(req,res){
         try{
-            const newUser= await UserModel.createUser(req.body);
-            res.status(201).send(newUser);
+            const newUser= await UserModel.registerUser(req.body);
+            res.sendFile((path.join(__dirname, '../views', 'sign-inOK.html')))
         }
         catch (error) {
             console.error('Error:', error);
-            res.status(500).send({ error: 'Failed to login' });
+            res.status(500).send({ error: 'Failed to create the new user' });
         }
+    }
+    static async LogIn(req,res){
+        
+        //To do
     }
     static async deleteUser(req, res){
         const id= (req.params.id);
-        const result= await UserModel.deleteUser(id);
-        if (result == false){
-            return res.status(404).json({message: 'User not found'})
+        try{
+            const result= await UserModel.deleteUser(id);
+            if (result == false){
+                return res.status(404).json({message: 'User not found'})
+            }
+            return res.json({message: 'User deleted'})
         }
-        return res.json({message: 'User deleted'})
+        catch(error){
+            console.log('Error:',error);
+            res.status(500).send({ error: 'Failed to delete user' });
+        }
+       
     }
-
     static async updateUser(req,res){
-        const id= req.params.id;
-        const userData= req.body;
-        const updatedUser = await UserModel.updateUser(id, userData);
-        if (updatedUser === false) {
-            return res.status(404).json({ message: 'User not found' });
+        try{
+            const id= req.params.id;
+            const userData= req.body;
+            const updatedUser = await UserModel.updateUser(id, userData);
+            if (updatedUser === false) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            return res.json(updatedUser);
         }
-        return res.json(updatedUser);
-    }
+        catch(error){
+            console.log('Error:', error);
+            res.status(500).send({ error: 'Failed to update user' });
+        }
+    }     
 }
 
 module.exports= UserController;
