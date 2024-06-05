@@ -1,12 +1,8 @@
-const exp = require('constants');
 const fs= require('fs/promises')
-const express= require('express');
 const path= require('path')
-const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: false}))
-const dbPath = path.join(__dirname, "../../db", "db.json")
 
+
+const dbPath = path.join(__dirname, "../../db", "db.json")
 async function readDB(){
     try{
         const data= await fs.readFile(dbPath, 'utf-8')
@@ -17,5 +13,4 @@ async function readDB(){
         return [];
     }
 }
-
 module.exports= readDB;

@@ -1,12 +1,5 @@
-'use strict'
-const express= require('express');
-const app = express();
 const path= require('path')
-app.use(express.json())
-app.use(express.urlencoded({ extended: false}))
-app.use(express.static(path.join(__dirname, 'public')));
 const UserModel= require('../models/user-model.js');
-const readDB = require('../utils/read-db.js');
 
 
 class UserController{
@@ -41,7 +34,7 @@ class UserController{
         try{
             const result= await UserModel.deleteUser(id);
             if (result == false){
-                return res.status(404).json({message: 'User not found'})
+                return res.sendFile((path.join(__dirname, '../views', '404notfound.html')))
             }
             return res.json({message: 'User deleted'})
         }

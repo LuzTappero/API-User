@@ -1,15 +1,7 @@
-'use strict'
-const exp = require('constants');
-const fs= require('fs/promises')
 const express= require('express');
-const path= require('path')
-const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: false}))
 const readDB = require('../utils/read-db');
-const { read } = require('fs');
 const writeDB= require('../utils/write-db');
-const { use } = require('../routes/user-routes');
+
 
 
 class UserModel{
