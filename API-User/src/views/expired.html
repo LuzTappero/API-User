@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>blog</title>
     <link rel="stylesheet" href="/css/styles.css">
-
-    <!-- /src/public/css/styles.css -->
-    <!-- href="/css/styles.css"> -->
 </head>
+    <!-- href="/css/styles.css">
+     /src/public/css/styles.css -->
+    <!-- href="/css/styles.css"> --> 
 <body>
     <div class="wrapper">
     <!-- header section-->
@@ -15,26 +15,25 @@
         <h1 class="title"></h1>
         <nav class="navbar">
             <li class="navbar__item">
-                <a href="" target="_blank">HOME</a>
+                <a href="/user/home">HOME</a>
             </li>
             <li class="navbar__item">
-                <a href=#>LOGIN</a>
+                <a href='/user/login'>LOGIN</a>
             </li>
             <li class="navbar__item">
-                <a href="/src/views/sign-in.html" target="_blank">SINGIN</a>
+                <a href="/user/register">SINGIN</a>
             </li>
         </nav>
     </header>
     <!-- Main section -->
-    <div class="div__succesMessage">
-        <span class="span__message-succes">
-            You have been succesfully registered
-        </span>
-        <button class="button__goLogin">
-            <a href="/user/login">GO TO LOGIN</a>
-        </button>
-    </div>
-    <!-- footer section -->
+    <main>
+        <h2 class="main__subtitle">Uups.. The session has already expired</h2>
+        <div class="div__logout">
+            <button class="logout" type="submit">
+                <a href="/user/login">LOGIN</a>
+            </button>
+        </div>
+    </main>
 </div>
      <footer>
         COPYRIGHT - 2024

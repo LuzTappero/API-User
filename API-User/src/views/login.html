@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>blog</title>
-    <link rel="stylesheet" href="/src/public/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
     <!-- href="/css/styles.css">
      /src/public/css/styles.css -->
@@ -15,25 +15,25 @@
         <h1 class="title"></h1>
         <nav class="navbar">
             <li class="navbar__item">
-                <a href="" target="_blank">HOME</a>
+                <a href="/user/home">HOME</a>
             </li>
             <li class="navbar__item">
-                <a href=#>LOGIN</a>
+                <a href='/user/login'>LOGIN</a>
             </li>
             <li class="navbar__item">
-                <a href="../views/sign-in.html" target="_blank">SINGIN</a>
+                <a href="/user/register" target="_blank">SINGIN</a>
             </li>
         </nav>
     </header>
     <!-- Main section -->
     <main>
-        <h2 class="subtitle__userLog">ALREADY A MEMBER? LOG-IN</h2>
+        <h2 class="main__subtitle">ALREADY A MEMBER? LOG-IN</h2>
     </main>
     <!-- form section -->
     <section class="formulario__section">
-        <form class="form" action="/user/register" method="post">
-                <input id="user" name="user" type="text" placeholder="Inter your user" required>
-                <input id="password" name="password" required type="password" placeholder="Inter your password">
+        <form class="form" action="/user/login" method="post">
+                <input name="username" type="text" placeholder="Inter your username" required>
+                <input name="password" required type="password" placeholder="Inter your password">
                 <button type="submit">LOG-IN</button>
         </form>
     </section>

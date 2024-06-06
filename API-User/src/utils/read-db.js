@@ -3,14 +3,16 @@ const path= require('path')
 
 
 const dbPath = path.join(__dirname, "../../db", "db.json")
+let users= []
+
 async function readDB(){
     try{
         const data= await fs.readFile(dbPath, 'utf-8')
-        return JSON.parse(data);
+        users =JSON.parse(data);
+        return users;
     }
     catch(err){
         console.error('Error reading the file', err);
-        return [];
     }
 }
 module.exports= readDB;

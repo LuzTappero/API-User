@@ -1,5 +1,12 @@
 const path= require('path')
 const UserModel= require('../models/user-model.js');
+const dotenv= require("dotenv")
+dotenv.config()
+const bcrypt= require('bcrypt');
+const express= require('express');
+const app = express();
+app.use(express.json())
+app.use(express.urlencoded({ extended: false}))
 
 
 class UserController{
@@ -12,22 +19,68 @@ class UserController{
         const getById= await UserModel.getById(id);
         res.send(getById);
     }
+    static async profile(req,res){
+        res.sendFile((path.join(__dirname, '../views', 'profile.html')))
+    }
+    static async home(req,res){
+        res.sendFile((path.join(__dirname, '../views', 'home.html')))
+    }
     static async showFormSignIn(req, res){
         await res.sendFile(path.join(__dirname, '../views', 'sign-in.html'));
+        //Dentro de res.. se pueden setear las cookies
+        //La cookie vive dentro del objeto 'DOCUMENT' sI ESCRIBO document.cookie en la consola del navegador me devuelve el nombre y su valor
+            res.cookie("cookieName", "cookieValue", { maxAge: 5000, 
+            httpOnly: true,
+        });
     }
+
+    static async showFormLogin(req,res){
+        res.sendFile(path.join(__dirname, '../views', 'login.html'));
+    }
+
     static async registerUser(req,res){
         try{
-            const newUser= await UserModel.registerUser(req.body);
-            res.sendFile((path.join(__dirname, '../views', 'sign-inOK.html')))
-        }
-        catch (error) {
-            console.error('Error:', error);
-            res.status(500).send({ error: 'Failed to create the new user' });
+            const { username, password, email } = req.body;
+            const result= await UserModel.registerUser({ username, password, email });
+            if(result === true){
+                res.sendFile((path.join(__dirname, '../views', 'sign-inOK.html')));
+            }else{
+                res.status(400).send('Username already exists');
+            }
+        }catch(error){
+            res.status(400).send(error.message);
+        };
+    }
+    static async logInUser(req,res){
+        try{
+            const { username, password } = req.body;
+            const user = await UserModel.getByUsername(username)
+            if(user && await UserModel.comparePassword(password, user.password))
+                {
+                req.session.userId = user.id;
+                req.session.isLogged = true;
+                // res.send('Login successful');
+                res.redirect('/user/profile')
+            }
+            else{
+                res.status(401).send('Invalid credentials')}
+            }catch(err){      
+                res.status(500).send('Internal server error');
         }
     }
-    static async LogIn(req,res){
-        
-        //To do
+    static async logOut(req, res){
+        const isLogged= req.session.isLogged;
+
+        if(!isLogged){
+            return res.status(401).sendFile(path.join(__dirname, '../views', 'expired.html'))
+        }
+        req.session.destroy(err =>{
+            if (err){
+                return res.status(500).send('Error loggin out')
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/user/home');
+        });
     }
     static async deleteUser(req, res){
         const id= (req.params.id);

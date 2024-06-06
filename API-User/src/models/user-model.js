@@ -1,7 +1,10 @@
 const express= require('express');
 const readDB = require('../utils/read-db');
 const writeDB= require('../utils/write-db');
-
+const bcrypt= require('bcrypt')
+const app = express();
+app.use(express.json())
+app.use(express.urlencoded({ extended: false}))
 
 
 class UserModel{
@@ -9,27 +12,44 @@ class UserModel{
         const users= await readDB();
         return users;
     }
-
     static getById = async(id)=>{
         const users= await readDB();
         const userId= users.find(user => user.id === parseInt(id));
         if(!userId) return ('message: Id not found')
         return userId;
     }
-    static async registerUser(userData){
-        try{
-            const users = await readDB();
+    static async getByUsername(username){
+        const users= await readDB();
+        const findUser = users.find(user=> user.username === username)
+        return findUser;
+    }
+
+    static async comparePassword (inputPassword, storedPassword){
+        return await bcrypt.compare(inputPassword,storedPassword)
+    }
+    static async registerUser({ username, password, email, }){
+         try{
+            let users= await readDB();
+            const existingUser= users.find(user=>user.username === username);
+            const existingEmail= users.find(user => user.email=== email)
+                if (existingUser){
+                    throw new Error('That username already exists, choose another one')}
+            
+                if (existingEmail){
+                    throw new Error('That email is already registered')
+                }
+            const hashedPassword= await bcrypt.hash(password,10);
             const newUser={
                 id: users.length + 1,
-                user: userData.user,
-                password: userData.password,
-                email: userData.email
+                username: username,
+                password: hashedPassword,
+                email: email
             };
             users.push(newUser);
             await writeDB(users);
-            return newUser;
-        }catch(error){
-            console.error('Error signing in:', error);
+            return true;
+        }catch(errors){
+            throw new Error (` throw new Error('Error registering user ${errors}`)
         }
     }
     static async deleteUser(id){

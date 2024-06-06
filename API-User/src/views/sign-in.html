@@ -19,26 +19,26 @@
         <h1 class="title"></h1>
         <nav class="navbar">
             <li class="navbar__item">
-                <a href="" target="_blank">HOME</a>
+                <a href="/user/home">HOME</a>
             </li>
             <li class="navbar__item">
-                <a href=#>LOGIN</a>
+                <a href='/user/login'>LOGIN</a>
             </li>
             <li class="navbar__item">
-                <a href="../views/sign-in.html" target="_blank">SINGIN</a>
+                <a href="/user/register" >SINGIN</a>
             </li>
         </nav>
     </header>
     <!-- Main section -->
     <main>
-        <h2 class="subtitle__userLog">NOT A MEMBER? SIGN-IN</h2>
+        <h2 class="main__subtitle">NOT A MEMBER? SIGN-IN</h2>
     </main>
     <!-- form section -->
     <section class="formulario__section">
         <form class="form" action="/user/register" method="post">
-                <input id="user" name="user" type="text" placeholder="Inter your user" required>
-                <input type="email" placeholder="user@gmail.com" id="email" name="email" required>
-                <input id="password" name="password" required type="password" placeholder="Inter your password">
+                <input name="username" type="text" placeholder="Inter your username" required>
+                <input type="email" placeholder="username@gmail.com" name="email" required>
+                <input  name="password" required type="password" placeholder="Inter your password">
                 <button type="submit">SIGN-IN</button>
         </form>
     </section>

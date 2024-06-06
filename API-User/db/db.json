@@ -1,20 +1,32 @@
 [
   {
     "id": 1,
-    "user": "user1",
-    "password": "password1",
-    "email": "email1@gmail.com"
+    "username": "luz",
+    "password": "$2b$10$3IKt4w.Rmbn9EDJBxn6gL.L2bA2RnyQEqWrILU3sJGfXXWQkRbXs6",
+    "email": "luz@gmail.com"
   },
   {
     "id": 2,
-    "user": "User2",
-    "password": "123456lalala",
-    "email": "user2@gmail.com"
+    "username": "marta",
+    "password": "$2b$10$P9m0KL4XI5h1yFgT96KRs.Agimq40UMNuVwwuedSYumYeEbNLTv82",
+    "email": "marta@marta.com"
   },
   {
     "id": 3,
-    "user": "User3",
-    "password": "HOLACOMOESTAS123",
-    "email": "user3@gmail.com"
+    "username": "pedro",
+    "password": "$2b$10$i02Zt4kqbPfwZlhN.4/9b.dWIrtLHvSKo.YTu.xVei0UFPVXCFBgO",
+    "email": "pedro@gmail.com"
+  },
+  {
+    "id": 4,
+    "username": "jose",
+    "password": "$2b$10$Wj/.LKgiRwfCJ8j4/yEs0ermKW9HoM.M1/4R8TFmS0E0cuKpZ1d.m",
+    "email": "jose@gmail.com"
+  },
+  {
+    "id": 5,
+    "username": "mauricio",
+    "password": "$2b$10$shsQK.KHNvEBBuFADxhWgeHz02WVIlCn783sUxrUA3CmG91YoCjxe",
+    "email": "mauri@mauri.com"
   }
 ]
