@@ -28,5 +28,17 @@
     "username": "mauricio",
     "password": "$2b$10$shsQK.KHNvEBBuFADxhWgeHz02WVIlCn783sUxrUA3CmG91YoCjxe",
     "email": "mauri@mauri.com"
+  },
+  {
+    "id": 6,
+    "username": "roberto",
+    "password": "$2b$10$zCrxGasaEmhp8Eh5OzCB7uDBV2QIbH0ObSxH35hBY3JcidQrOJX8K",
+    "email": "roberto@aaa.com"
+  },
+  {
+    "id": 7,
+    "username": "luis",
+    "password": "$2b$10$RoK6ICakIh9I1bmk6hJ0peoHvbJCFvMO4LnUwZ.YpJudLOGqlLIH6",
+    "email": "luis@gmail.com"
   }
 ]

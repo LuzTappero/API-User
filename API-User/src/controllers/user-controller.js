@@ -19,33 +19,27 @@ class UserController{
         const getById= await UserModel.getById(id);
         res.send(getById);
     }
-    static async profile(req,res){
-        res.sendFile((path.join(__dirname, '../views', 'profile.html')))
+    static async profiles(req,res){
+        res.sendFile((path.join(__dirname, '../views', 'profiles.html')))
     }
     static async home(req,res){
         res.sendFile((path.join(__dirname, '../views', 'home.html')))
     }
     static async showFormSignIn(req, res){
         await res.sendFile(path.join(__dirname, '../views', 'sign-in.html'));
-        //Dentro de res.. se pueden setear las cookies
-        //La cookie vive dentro del objeto 'DOCUMENT' sI ESCRIBO document.cookie en la consola del navegador me devuelve el nombre y su valor
-            res.cookie("cookieName", "cookieValue", { maxAge: 5000, 
-            httpOnly: true,
-        });
     }
-
     static async showFormLogin(req,res){
         res.sendFile(path.join(__dirname, '../views', 'login.html'));
     }
-
     static async registerUser(req,res){
         try{
+            //procesa la lógica del registro:
             const { username, password, email } = req.body;
             const result= await UserModel.registerUser({ username, password, email });
             if(result === true){
                 res.sendFile((path.join(__dirname, '../views', 'sign-inOK.html')));
             }else{
-                res.status(400).send('Username already exists');
+                res.status(400).send('Those credentials already exists');
             }
         }catch(error){
             res.status(400).send(error.message);
@@ -56,12 +50,9 @@ class UserController{
             const { username, password } = req.body;
             const user = await UserModel.getByUsername(username)
             if(user && await UserModel.comparePassword(password, user.password))
-                {
-                req.session.userId = user.id;
+                {req.session.userId = user.id;
                 req.session.isLogged = true;
-                // res.send('Login successful');
-                res.redirect('/user/profile')
-            }
+                res.redirect('/user/profiles')}
             else{
                 res.status(401).send('Invalid credentials')}
             }catch(err){      
@@ -70,7 +61,6 @@ class UserController{
     }
     static async logOut(req, res){
         const isLogged= req.session.isLogged;
-
         if(!isLogged){
             return res.status(401).sendFile(path.join(__dirname, '../views', 'expired.html'))
         }

@@ -23,21 +23,16 @@ class UserModel{
         const findUser = users.find(user=> user.username === username)
         return findUser;
     }
-
     static async comparePassword (inputPassword, storedPassword){
         return await bcrypt.compare(inputPassword,storedPassword)
     }
     static async registerUser({ username, password, email, }){
          try{
             let users= await readDB();
-            const existingUser= users.find(user=>user.username === username);
-            const existingEmail= users.find(user => user.email=== email)
-                if (existingUser){
-                    throw new Error('That username already exists, choose another one')}
-            
-                if (existingEmail){
-                    throw new Error('That email is already registered')
-                }
+                const existingUser= users.find(user=>user.username === username);
+                const existingEmail= users.find(user => user.email=== email)
+                    if (existingUser){return false;}
+                    if (existingEmail){return false;}
             const hashedPassword= await bcrypt.hash(password,10);
             const newUser={
                 id: users.length + 1,

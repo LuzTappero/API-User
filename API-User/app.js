@@ -7,7 +7,9 @@ app.use(express.static(path.join(__dirname,'public')));
 const dotenv= require("dotenv")
 dotenv.config()
 const session= require('express-session')
+const logRequest= require('./src/middlewares/logmiddleware.js')
 
+app.use(logRequest);
 
 const DURATION= 10 * 1000;
 app.use(express.json())
@@ -27,9 +29,6 @@ app.use((req,res,next)=>{
 })
 
 app.use('/user',router);
-
-
-
 
 const PORT= process.env.PORT
 app.listen(PORT, ()=>{console.log(`Listening on PORT ${PORT}`)})
