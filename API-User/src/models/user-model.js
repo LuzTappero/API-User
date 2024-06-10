@@ -5,6 +5,7 @@ const bcrypt= require('bcrypt')
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
+const { v4: uuidv4 } = require('uuid');
 
 
 class UserModel{
@@ -14,7 +15,7 @@ class UserModel{
     }
     static getById = async(id)=>{
         const users= await readDB();
-        const userId= users.find(user => user.id === parseInt(id));
+        const userId= users.find(user => user.id === (id));
         if(!userId) return ('message: Id not found')
         return userId;
     }
@@ -35,7 +36,7 @@ class UserModel{
                     if (existingEmail){return false;}
             const hashedPassword= await bcrypt.hash(password,10);
             const newUser={
-                id: users.length + 1,
+                id: uuidv4(),
                 username: username,
                 password: hashedPassword,
                 email: email
@@ -49,7 +50,7 @@ class UserModel{
     }
     static async deleteUser(id){
         const users= await readDB();
-        const userIndex= users.findIndex(user => user.id === parseInt(id));
+        const userIndex= users.findIndex(user => user.id === (id));
         if(userIndex === -1)return false;
         users.splice(userIndex,1);
         await writeDB(users);
@@ -57,7 +58,7 @@ class UserModel{
     }
     static async updateUser(id, userData){
         const users= await readDB();
-        const userIndex= users.findIndex(user => user.id === parseInt(id));
+        const userIndex= users.findIndex(user => user.id ===(id));
         if(userIndex === -1)return false;
         users[userIndex] = {
             ...users[userIndex],

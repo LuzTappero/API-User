@@ -1,44 +1,14 @@
 [
   {
-    "id": 1,
+    "id": "3d2827b8-c9a3-4d67-b791-5476ae2f5d18",
     "username": "luz",
-    "password": "$2b$10$3IKt4w.Rmbn9EDJBxn6gL.L2bA2RnyQEqWrILU3sJGfXXWQkRbXs6",
+    "password": "$2b$10$/Wl4QgqbSDTYWpUw9WgVgeZmfiQ15t6GItqvoMPV6utowJfC/krbm",
     "email": "luz@gmail.com"
   },
   {
-    "id": 2,
-    "username": "marta",
-    "password": "$2b$10$P9m0KL4XI5h1yFgT96KRs.Agimq40UMNuVwwuedSYumYeEbNLTv82",
-    "email": "marta@marta.com"
-  },
-  {
-    "id": 3,
-    "username": "pedro",
-    "password": "$2b$10$i02Zt4kqbPfwZlhN.4/9b.dWIrtLHvSKo.YTu.xVei0UFPVXCFBgO",
-    "email": "pedro@gmail.com"
-  },
-  {
-    "id": 4,
-    "username": "jose",
-    "password": "$2b$10$Wj/.LKgiRwfCJ8j4/yEs0ermKW9HoM.M1/4R8TFmS0E0cuKpZ1d.m",
-    "email": "jose@gmail.com"
-  },
-  {
-    "id": 5,
-    "username": "mauricio",
-    "password": "$2b$10$shsQK.KHNvEBBuFADxhWgeHz02WVIlCn783sUxrUA3CmG91YoCjxe",
-    "email": "mauri@mauri.com"
-  },
-  {
-    "id": 6,
-    "username": "roberto",
-    "password": "$2b$10$zCrxGasaEmhp8Eh5OzCB7uDBV2QIbH0ObSxH35hBY3JcidQrOJX8K",
-    "email": "roberto@aaa.com"
-  },
-  {
-    "id": 7,
-    "username": "luis",
-    "password": "$2b$10$RoK6ICakIh9I1bmk6hJ0peoHvbJCFvMO4LnUwZ.YpJudLOGqlLIH6",
-    "email": "luis@gmail.com"
+    "id": "204d93eb-7aaa-4415-bf26-5d162f2f411c",
+    "username": "mauri",
+    "password": "$2b$10$aDa.rvyKmtFMxP.dOTPzAuDC1BTPeXVlxlgeyQiIFMirUhvgcqkTS",
+    "email": "mauri@gmail.com"
   }
 ]
