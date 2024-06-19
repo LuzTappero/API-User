@@ -28,5 +28,17 @@
     "username": "lorena",
     "password": "$2b$10$qmP7PRs2Wa7eokuoLBjg6uuxtVVyu8x29BqlEex63GY6a/lw4u.zi",
     "email": "lorena@gmail.com"
+  },
+  {
+    "id": "5843b295-c905-4f4f-bd9a-2d5d97853f31",
+    "username": "norma",
+    "password": "$2b$10$u68Xxw6xtB3aM86aIpSgp.sPITIZx0Q5/n7lbLiYeI/Qdp1ElAJsq",
+    "email": "norma@gmail.com"
+  },
+  {
+    "id": "edc1d313-61a2-4753-ba88-32bf87397d8f",
+    "username": "joe",
+    "password": "$2b$10$0IyBXdYl4opfuqdB8W2tteA52ONN65G3CUjiBmlG65vrYkCiqALg.",
+    "email": "joe@gmail.com"
   }
 ]

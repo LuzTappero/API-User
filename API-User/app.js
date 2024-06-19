@@ -6,8 +6,27 @@ const path= require('path')
 app.use(express.static(path.join(__dirname,'public')));
 const dotenv= require("dotenv")
 dotenv.config()
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 const session= require('express-session')
 const logRequest= require('./src/middlewares/logmiddleware.js')
+const xss=require('xss');
+const helmet= require('helmet');
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
+
+app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 50,
+    })
+);
+
+
+
+//CORS. To do
+
+app.use(helmet());
 
 app.use(logRequest);
 
