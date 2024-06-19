@@ -10,5 +10,23 @@
     "username": "mauri",
     "password": "$2b$10$aDa.rvyKmtFMxP.dOTPzAuDC1BTPeXVlxlgeyQiIFMirUhvgcqkTS",
     "email": "mauri@gmail.com"
+  },
+  {
+    "id": "d28696ed-6259-40fd-b827-5a84e17b5b7a",
+    "username": "juanPablo",
+    "password": "$2b$10$xAx5OubsYdd1QRr/Vy.NE.BkCZx/0kSS4s3Bbuqgx8gHiIMa7RZDS",
+    "email": "juanpabo@gmail.com"
+  },
+  {
+    "id": "40a762ee-8835-4205-9a1b-ab6abccc3b22",
+    "username": "yamila",
+    "password": "$2b$10$QMPfbjav2OHFiKr1MaUxBOhuhO8TbDiACExoK0jU4/.gS5KKvugQ2",
+    "email": "yamila@gmail.com"
+  },
+  {
+    "id": "e21d1b9e-dcd5-45cd-a31b-81615c812a81",
+    "username": "lorena",
+    "password": "$2b$10$qmP7PRs2Wa7eokuoLBjg6uuxtVVyu8x29BqlEex63GY6a/lw4u.zi",
+    "email": "lorena@gmail.com"
   }
 ]

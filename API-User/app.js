@@ -11,7 +11,7 @@ const logRequest= require('./src/middlewares/logmiddleware.js')
 
 app.use(logRequest);
 
-const DURATION= 10 * 1000;
+const DURATION= 5 * 1000;
 app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
 app.use(session({

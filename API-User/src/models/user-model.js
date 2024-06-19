@@ -7,7 +7,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
 const { v4: uuidv4 } = require('uuid');
 
-
 class UserModel{
     static getAll= async()=>{
         const users= await readDB();
