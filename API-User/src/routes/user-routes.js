@@ -14,6 +14,7 @@ router.get('/logout', UserController.logOut)
 
 router.post('/register', registerUserValidator, UserController.registerUser)
 router.post('/login',loginUserValidator, UserController.logInUser)
+
 router.delete('/id/:id', UserController.deleteUser)
 router.patch('/id/:id', UserController.updateUser)
 

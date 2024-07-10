@@ -1,70 +1,150 @@
-const express= require('express');
-const readDB = require('../utils/read-db');
-const writeDB= require('../utils/write-db');
+const express = require('express')
+const {Sequelize, UUIDV4, QueryTypes, DataTypes, Model } = require('sequelize')
+const sequelize= require('../config/sqlconfig')
 const bcrypt= require('bcrypt')
-const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: false}))
-const { v4: uuidv4 } = require('uuid');
 
-class UserModel{
-    static getAll= async()=>{
-        const users= await readDB();
-        return users;
-    }
-    static getById = async(id)=>{
-        const users= await readDB();
-        const userId= users.find(user => user.id === (id));
-        if(!userId) return ('message: Id not found')
-        return userId;
-    }
-    static async getByUsername(username){
-        const users= await readDB();
-        const findUser = users.find(user=> user.username === username)
-        return findUser;
-    }
-    static async comparePassword (inputPassword, storedPassword){
-        return await bcrypt.compare(inputPassword,storedPassword)
-    }
-    static async registerUser({ username, password, email, }){
-         try{
-            let users= await readDB();
-                const existingUser= users.find(user=>user.username === username);
-                const existingEmail= users.find(user => user.email=== email)
-                    if (existingUser){return false;}
-                    if (existingEmail){return false;}
-            const hashedPassword= await bcrypt.hash(password,10);
-            const newUser={
-                id: uuidv4(),
-                username: username,
-                password: hashedPassword,
-                email: email
-            };
-            users.push(newUser);
-            await writeDB(users);
-            return true;
-        }catch(errors){
-            throw new Error (` throw new Error('Error registering user ${errors}`)
+class UserModel extends Sequelize.Model {
+    static async getAll(){
+        try{
+            const users= await UserModel.findAll();
+            return users;
+        }
+        catch(error){
+            console.error('Error getting all users', error);
+            throw new Error('Error getting all users');
         }
     }
-    static async deleteUser(id){
-        const users= await readDB();
-        const userIndex= users.findIndex(user => user.id === (id));
-        if(userIndex === -1)return false;
-        users.splice(userIndex,1);
-        await writeDB(users);
-        return true;
+    static async getById({ id }){
+        try{
+            if (!id) {
+                throw new Error('ID is required');
+            }
+            const user = await UserModel.findByPk(id);
+            return user;
+        }
+        catch(error){
+            console.error('Error getting by ID', error)
+            throw new Error('Error getting user by ID');
+        }
     }
-    static async updateUser(id, userData){
-        const users= await readDB();
-        const userIndex= users.findIndex(user => user.id ===(id));
-        if(userIndex === -1)return false;
-        users[userIndex] = {
-            ...users[userIndex],
-            ...userData
+    static async getByUsername(username){
+        try{
+            if (!username){
+            throw new Error('Username is required');}
+            const user= await UserModel.findOne({ where: {username}})
+            return user;
+        }
+        catch(error){
+            console.error('Error getting by username', error); 
+            throw new Error('Error getting user by username');
+        }
+    }
+    static async getByEmail(email){
+        try{
+            if (!email){
+                throw new Error('Email is required', Error);
+            }
+            const user = await UserModel.findOne({ where: { email } });
+            return user;
+        }
+        catch(error){
+            console.error('Error getting by email', error)
+            throw new Error('Error getting user by email');
+        }
+    }
+    static async registerUser({username, password, email}){
+        if (!username || !password || !email) {
+            throw new Error('Missing required user fields')
         };
-        await writeDB(users);
-        return users[userIndex];
+        const existingUser= await this.getByUsername(username);
+        const existingEmail= await this.getByEmail(email);
+        if (existingUser){
+            return{
+            success: false, message:'Username already exists'};
+        }  
+        if (existingEmail)
+            return {
+            susccess: false, message:'Username already exists'
+        };
+        try{
+            const hashedPassword= await bcrypt.hash(password,10);
+            const user= await UserModel.create({ username, password: hashedPassword, email})
+            console.log(hashedPassword)
+            return { success: true, user };
+        }
+        catch(err){
+            console.error('Error in create method:', err);
+            throw new Error('Error creating user');
+            }
+        }
+    static async deleteUser( { id }){
+        try{
+            if (!id){throw new Error ('ID is required')}
+            const user = await UserModel.findByPk(id);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            await user.destroy();
+            return true;
+        }
+        catch(error){
+            console.error('Error deleting user:', error);
+            throw new Error('Error deleting user');
+        }
+    }
+    static async updateUser({ id, newData }){
+        try{
+            if (!id){throw new Error ('ID is required')}
+            if (!newData) {throw new Error('New Data is required');}
+
+            const user = await UserModel.findByPk(id);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            if (newData.password) {
+                const hashedPassword = await bcrypt.hash(newData.password, 10);
+                newData.password = hashedPassword;
+            }
+            await user.update({
+                username: newData.username,
+                email: newData.email,
+                password: newData.password
+            });
+            return true;
+        }
+        catch(error){
+            console.error('Error updating user', error);
+            throw new Error('Error updating user');
+        }
     }
 }
+
+UserModel.init({
+    id: {
+        type: DataTypes.STRING,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        allowNull: false,
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    }
+}, {
+    sequelize,
+    modelName: 'UserModel', 
+    tableName: 'users', 
+    timestamps: false
+});
+
 module.exports = UserModel;

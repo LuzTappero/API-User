@@ -1,81 +1,127 @@
 const path= require('path')
 const UserModel= require('../models/user-model.js');
-const dotenv= require("dotenv")
-dotenv.config()
 const bcrypt= require('bcrypt');
-const express= require('express');
-const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: false}))
+const sequelize= require('../config/sqlconfig')
 
 
 class UserController{
     static async getAll(req,res){
-        const getAllUsers= await UserModel.getAll();
-        res.send(getAllUsers);
+        try{
+            const allUsers= await UserModel.getAll();
+            res.send(allUsers);
+        }
+        catch(error){
+            console.error('Error fetching all users:', error);
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async getById(req,res){
-        const id= req.params.id;
-        const getById= await UserModel.getById(id);
-        res.send(getById);
+        const {id}= req.params;
+        try{
+            const userId= await UserModel.getById({id});
+            res.send(userId);
+        }
+        catch(error){
+            console.error('Error fetching user by ID:', error);
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async profiles(req,res){
-        res.sendFile((path.join(__dirname, '../views', 'profiles.html')))
+        try{
+            res.sendFile((path.join(__dirname, '../views', 'profiles.html')))
+        }
+        catch(error){console.log(error)
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async home(req,res){
-        res.sendFile((path.join(__dirname, '../views', 'home.html')))
+        try{
+            res.sendFile((path.join(__dirname, '../views', 'home.html')))
+        }
+        catch(error){console.log(error)
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async showFormSignIn(req, res){
-        await res.sendFile(path.join(__dirname, '../views', 'sign-in.html'));
+        try{
+            await res.sendFile(path.join(__dirname, '../views', 'sign-in.html'));
+        }
+        catch(error){console.log(error)
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async showFormLogin(req,res){
-        res.sendFile(path.join(__dirname, '../views', 'login.html'));
+        try{
+            res.sendFile(path.join(__dirname, '../views', 'login.html'));
+        }
+        catch(error){console.log(error)
+            res.status(500).send('Internal Server Error'); 
+        }
     }
     static async registerUser(req,res){
         try{
-            //procesa la lógica del registro:
-            const { username, password, email } = req.body;
-            const result= await UserModel.registerUser({ username, password, email });
-            if(result === true){
-                res.sendFile((path.join(__dirname, '../views', 'sign-inOK.html')));
-            }else{
-                res.status(400).send('Those credentials already exists');
+            const newUser= await UserModel.registerUser({
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email
+            })
+            res.sendFile(path.join(__dirname, '../views', 'sign-inOK.html'))
+        }
+        catch(error){
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                res.status(400).send('Username or email already exists');
             }
-        }catch(error){
-            res.status(400).send(error.message);
-        };
+            else{
+                console.error('Error creating user:', error);
+                res.status(500).send('Internal Server Error'); 
+            }
+        }
     }
     static async logInUser(req,res){
+        const { username, password } = req.body;
         try{
-            const { username, password } = req.body;
-            const user = await UserModel.getByUsername(username)
-            if(user && await UserModel.comparePassword(password, user.password))
-                {req.session.userId = user.id;
-                req.session.isLogged = true;
-                res.redirect('/user/profiles')}
-            else{
-                res.status(401).send('Invalid credentials')}
-            }catch(err){      
-                res.status(500).send('Internal server error');
-        }
+            const user = await UserModel.getByUsername(username);
+                if (!user) {
+                    return res.status(404).send('Usuario not found');
+                }   
+            const passwordMatch = await bcrypt.compare(password, user.password)
+                if (passwordMatch){
+                    req.session.userId = user.id;
+                    req.session.isLogged = true;
+                    res.redirect('/user/profiles')
+                } else {
+                res.status(401).send('Invalid credentials');
+                }
+            }
+            catch(error){      
+            console.error('Error during login: ', error)
+            res.status(500).send('Internal server error');
+            }
+             
     }
     static async logOut(req, res){
-        const isLogged= req.session.isLogged;
-        if(!isLogged){
-            return res.status(401).sendFile(path.join(__dirname, '../views', 'expired.html'))
-        }
-        req.session.destroy(err =>{
-            if (err){
-                return res.status(500).send('Error loggin out')
+        try{
+            const isLogged= req.session.isLogged;
+            if(!isLogged){
+                return res.status(401).sendFile(path.join(__dirname, '../views', 'expired.html'))
             }
-            res.clearCookie('connect.sid');
-            res.redirect('/user/home');
-        });
+            req.session.destroy(err =>{
+                if (err){
+                    return res.status(500).send('Error loggin out')
+                }
+                res.clearCookie('connect.sid');
+                res.redirect('/user/home');
+            });
+        }
+        catch(error){
+            console.log(error)
+            res.status(500).send('Internal server error');
+        }
     }
     static async deleteUser(req, res){
-        const id= (req.params.id);
         try{
-            const result= await UserModel.deleteUser(id);
+            const id = (req.params.id);
+            const result= await UserModel.deleteUser({ id });
             if (result == false){
                 return res.sendFile((path.join(__dirname, '../views', '404notfound.html')))
             }
@@ -89,13 +135,10 @@ class UserController{
     }
     static async updateUser(req,res){
         try{
-            const id= req.params.id;
-            const userData= req.body;
-            const updatedUser = await UserModel.updateUser(id, userData);
-            if (updatedUser === false) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            return res.json(updatedUser);
+            const { id }= req.params;
+            const {username, password, email }= req.body;
+            await UserModel.updateUser({id, newData: {username, password, email }});
+            res.status(204).send('user updated')
         }
         catch(error){
             console.log('Error:', error);
