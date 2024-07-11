@@ -1,44 +1,40 @@
 "use strict"
 const express= require('express');
 const app = express();
-// const middlewares= require('./src/middlewares/appmiddlewares.js')
 const router = require('./src/routes/user-routes.js')
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const path= require('path')
-app.use(express.static(path.join(__dirname,'public')));
 const dotenv= require("dotenv")
+const path= require('path')
+const morgan= require('morgan')
+const session= require('express-session')
+
 dotenv.config()
 
-// app.use(middlewares)
-
-const session= require('express-session')
-const logRequest= require('./src/middlewares/logmiddleware.js')
-const xss=require('xss');
-const helmet= require('helmet');
-const cors = require("cors");
-const rateLimit = require("express-rate-limit");
-const morgan= require('morgan')
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname,'public')));
 app.use(morgan("dev"))
+
+const helmet= require('helmet');
+app.use(helmet());
+
+const rateLimit = require("express-rate-limit");
+const TIMES = parseInt(process.env.TIMES)
+const MAX = parseInt(process.env.MAX)
 app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 550,
+        windowMs: TIMES,
+        max: MAX,
     })
 );
 
-//CORS. To do
-
-app.use(helmet());
-app.use(logRequest);
-
-// const DURATION= process.env.DURATION
+const DURATION= parseInt(process.env.DURATION)
+const SECRET_KEY= process.env.SECRET_KEY
 app.use(session({
-    secret:'mySecretKey',
+    secret:SECRET_KEY,
     saveUninitialized: true,
     resave:false,
     cookie:{
-        maxAge: 10*1000
+        maxAge: DURATION
     },
 }))
 
@@ -46,6 +42,11 @@ app.use((req,res,next)=>{
     console.log(req.session)
     next()
 })
+
+// const cors = require("cors");
+// app.use(cors())
+//Configurar cors para los dominios que quiero que tengan acceso
+
 
 app.use('/user',router);
 

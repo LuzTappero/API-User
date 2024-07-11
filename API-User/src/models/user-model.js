@@ -31,7 +31,10 @@ class UserModel extends Sequelize.Model {
         try{
             if (!username){
             throw new Error('Username is required');}
-            const user= await UserModel.findOne({ where: {username}})
+
+            const user= await UserModel.findOne(
+                { where: {username}}
+            )
             return user;
         }
         catch(error){
@@ -76,12 +79,25 @@ class UserModel extends Sequelize.Model {
             console.error('Error in create method:', err);
             throw new Error('Error creating user');
             }
+    }
+    static async authenticate(username, password){
+        const user= await this.getByUsername(username);
+        if (!user){
+            throw new Error ('User not found')
         }
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch){
+            throw new Error ('Incorrect password')
+        }
+        return user;
+    }
     static async deleteUser( { id }){
         try{
-            if (!id){throw new Error ('ID is required')}
+            if (!id){
+                throw new Error ('ID is required')
+            }
             const user = await UserModel.findByPk(id);
-            if (!user) {
+            if (!user){
                 throw new Error('User not found');
             }
             await user.destroy();
@@ -94,8 +110,12 @@ class UserModel extends Sequelize.Model {
     }
     static async updateUser({ id, newData }){
         try{
-            if (!id){throw new Error ('ID is required')}
-            if (!newData) {throw new Error('New Data is required');}
+            if (!id){
+                throw new Error ('ID is required')
+            }
+            if (!newData){
+                throw new Error('New Data is required');
+            }
 
             const user = await UserModel.findByPk(id);
             if (!user) {
