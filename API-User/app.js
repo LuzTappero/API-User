@@ -1,23 +1,33 @@
 "use strict"
-const express= require('express');
+import express from 'express'
 const app = express();
-const router = require('./src/routes/user-routes.js')
-const dotenv= require("dotenv")
-const path= require('path')
-const morgan= require('morgan')
-const session= require('express-session')
+import userRoutes from './src/routes/userRoutes.js'
+import productRoutes from './src/routes/productRoutes.js';
+import errorHandler from './src/middlewares/errorHandler.js';
+import dotenv from 'dotenv'
+import morgan from 'morgan';
+import cors from 'cors'
+import session from 'express-session';
+
 
 dotenv.config()
 
-app.use(express.json());
+app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname,'public')));
 app.use(morgan("dev"))
 
-const helmet= require('helmet');
+const corsOptions ={
+    origin: 'http://localhost:5173', //url del frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+    credentials: true,
+}
+app.use(cors(corsOptions))
+
+import helmet from 'helmet';
 app.use(helmet());
 
-const rateLimit = require("express-rate-limit");
+import rateLimit from 'express-rate-limit';
 const TIMES = parseInt(process.env.TIMES)
 const MAX = parseInt(process.env.MAX)
 app.use(
@@ -29,11 +39,16 @@ app.use(
 
 const DURATION= parseInt(process.env.DURATION)
 const SECRET_KEY= process.env.SECRET_KEY
+
+
 app.use(session({
+    
     secret:SECRET_KEY,
     saveUninitialized: true,
     resave:false,
     cookie:{
+        secure: false,
+        httpOnly: true,
         maxAge: DURATION
     },
 }))
@@ -43,12 +58,13 @@ app.use((req,res,next)=>{
     next()
 })
 
-// const cors = require("cors");
-// app.use(cors())
-//Configurar cors para los dominios que quiero que tengan acceso
 
+app.use('/user', userRoutes);
+app.use('/products', productRoutes)
 
-app.use('/user',router);
+app.use(errorHandler)
 
 const PORT= process.env.PORT
 app.listen(PORT, ()=>{console.log(`Listening on PORT ${PORT}`)})
+
+
