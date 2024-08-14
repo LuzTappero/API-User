@@ -2,6 +2,7 @@ import { Sequelize, UUIDV4, DataTypes, Model } from "sequelize";
 import sequelize from "../config/sqlconfig.js";
 import bcrypt from "bcrypt";
 
+
 class UserModel extends Sequelize.Model {
   static async authenticate(username, password){
     try {

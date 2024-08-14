@@ -1,5 +1,9 @@
 import UserModel from "../models/userModel.js";
 import bcrypt, { hash } from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret_key";
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION
 
 class UserController {
   static async getAll(req, res, next) {
@@ -32,72 +36,45 @@ class UserController {
       next(error);
     }
   }
-  static async login(req, res) {
+  static async login(req, res, next) {
     const { username, password } = req.body;
     try {
       const user = await UserModel.authenticate(username, password);
-      req.session.userId = user.user_id;
-      req.session.isLogged = true;
-      res.status(201).json({message: 'Login succesfull'})
+      const token = jwt.sign(
+        { userId: user.user_id, username: user.username },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRATION }
+      );
+      res.status(201).json({ message: "Login successful", token });
     } catch (error) {
       console.error("Error during authenticate:", error.message);
-      if (error.message === "User not found") {
-        res.status(404).send("User not found");
-      } else if (error.message === "Incorrect password") {
-        res.status(401).send("Incorrect password");
-      } else {
-        res.status(500).send("Internal server error");
-      }
+      next();
     }
   }
   static async checkAuth(req, res, next) {
-    try {
-      if (!req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
+      try {
+        const userId= req.user.user_id
+        const user = await UserModel.findByPk(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+          isAuthenticated: true,
+          user: {
+            id: user.user_id,
+            username: user.username,
+            email: user.email,
+          },
+        });
+      } catch (error) {
+        return res.status(401).json({ message: "Invalid token" });
       }
-      const userId = req.session.user;
-      const user = await UserModel.findByPk(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.status(200).json({
-        isAuthenticated: true,
-        user: {
-          id: user.user_id,
-          username: user.username,
-          email: user.email,
-        },
-      });
     } catch (error) {
       next(error);
     }
-  }
-  static async userData(req, res, next) {
-    try {
-      if (!req.session.userId) {
-        res.status(401).json({ message: "Unauthorized" });
-      }
-      const user = await UserModel.findByPk(req.session.userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json({
-        username: user.username,
-        email: user.email,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
   static async logout(req, res, next) {
     try {
-      req.session.destroy((err) => {
-        if (err) {
-          return next(new Error("Error logging out"));
-        }
-        res.clearCookie("connect.sid", { path: "/" });
-        res.status(200).json({ message: "Logout successful" });
-      });
+      res.status(200).json({ message: "Logout successful" });
     } catch (error) {
       next(error);
     }

@@ -7,8 +7,14 @@ import errorHandler from './src/middlewares/errorHandler.js';
 import dotenv from 'dotenv'
 import morgan from 'morgan';
 import cors from 'cors'
-import session from 'express-session';
 
+const corsOptions ={
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}
+app.use(cors(corsOptions))
 
 dotenv.config()
 
@@ -16,13 +22,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"))
 
-const corsOptions ={
-    origin: 'http://localhost:5173', //url del frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
-    credentials: true,
-}
-app.use(cors(corsOptions))
 
 import helmet from 'helmet';
 app.use(helmet());
@@ -37,21 +36,21 @@ app.use(
     })
 );
 
-const DURATION= parseInt(process.env.DURATION)
-const SECRET_KEY= process.env.SECRET_KEY
+// const DURATION= parseInt(process.env.DURATION)
+// const SECRET_KEY= process.env.SECRET_KEY
 
 
-app.use(session({
+// app.use(session({
     
-    secret:SECRET_KEY,
-    saveUninitialized: true,
-    resave:false,
-    cookie:{
-        secure: false,
-        httpOnly: true,
-        maxAge: DURATION
-    },
-}))
+//     secret:SECRET_KEY,
+//     saveUninitialized: true,
+//     resave:false,
+//     cookie:{
+//         secure: false,
+//         httpOnly: true,
+//         maxAge: DURATION
+//     },
+// }))
 
 app.use((req,res,next)=>{
     console.log(req.session)
